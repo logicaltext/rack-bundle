@@ -35,7 +35,9 @@ module Rack
     end
 
     def parse!
-      @document = Nokogiri::HTML(@response.join)
+      body = ""
+      @response.each { |part| body << part }
+      @document = Nokogiri::HTML(body)
     end
 
     def replace_javascripts!
