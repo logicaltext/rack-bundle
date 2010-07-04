@@ -35,8 +35,9 @@ module Rack
     end
 
     def parse!
+      # http://github.com/logicaltext/rack-bundle/commit/8e7d0282b05b01a0cbfa59b519242046437605f6
       body = ""
-      @response.each { |part| body << part }
+      @response.each do |part| body << part end
       @document = Nokogiri::HTML(body)
     end
 
