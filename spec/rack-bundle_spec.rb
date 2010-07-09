@@ -44,7 +44,7 @@ describe Rack::Bundle do
       @bundle.document.should be_a Nokogiri::HTML::Document
     end
 
-    it "should be updated if it was previously set" do
+    it "should update the content length header if it was set" do
       app = Rack::Builder.new do
         use Rack::Lint
         use Rack::Bundle, :public_dir => FIXTURES_PATH
