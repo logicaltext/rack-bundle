@@ -43,6 +43,30 @@ describe Rack::Bundle do
     it 'does so with Nokogiri' do
       @bundle.document.should be_a Nokogiri::HTML::Document
     end
+
+    it "should be updated if it was previously set" do
+      app = Rack::Builder.new do
+        use Rack::Lint
+        use Rack::Bundle, :public_dir => FIXTURES_PATH
+        use Rack::ContentLength
+        run index_page
+      end
+      status, headers, response = app.call(@env)
+      output = ""
+      response.each { |part| output << part }
+      expected_length = output.length.to_s
+      headers['Content-Length'].should == expected_length
+    end
+
+    it "should not update the content length if it was not set" do
+      app = Rack::Builder.new do
+        use Rack::Lint
+        use Rack::Bundle, :public_dir => FIXTURES_PATH
+        run index_page
+      end
+      status, headers, response = app.call(@env)
+      headers['Content-Length'].should == nil
+    end
   end
 
   context 'modifying the DOM' do

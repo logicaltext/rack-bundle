@@ -30,7 +30,14 @@ module Rack
         parse!
         replace_javascripts!
         replace_stylesheets!
-        [status, headers, [@document.to_html]]
+
+        body = @document.to_html
+
+        if headers['Content-Length']
+          headers['Content-Length'] = body.length.to_s
+        end
+
+        [status, headers, [body]]
       end
     end
 
