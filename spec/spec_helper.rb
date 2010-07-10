@@ -13,11 +13,11 @@ def fixture name
 end
 
 def make_js_bundle
-  Rack::Bundle::JSBundle.new 'La laaaa'
+  Rack::Bundle::JSBundle.new File.join(FIXTURES_PATH, 'simple-js.js')
 end
 
 def make_css_bundle
-  Rack::Bundle::CSSBundle.new 'La la laaaaaaa'
+  Rack::Bundle::CSSBundle.new File.join(FIXTURES_PATH, 'simple-css.css')
 end
 
 def index_page

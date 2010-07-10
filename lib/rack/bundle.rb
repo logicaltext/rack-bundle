@@ -67,7 +67,7 @@ module Rack
       styles = local_css_nodes.group_by { |node| node.attribute('media').value rescue nil }
       styles.each do |media, nodes|
         next unless nodes.count > 1
-        stylesheets = stylesheet_contents_for nodes
+        stylesheets = stylesheet_paths_for nodes
         bundle = CSSBundle.new *stylesheets
         @storage.add bundle unless @storage.has_bundle? bundle
         node = @document.create_element 'link',
@@ -91,18 +91,18 @@ module Rack
     end
 
     def scripts
-      local_javascript_nodes.inject([]) do |contents, node|
+      local_javascript_nodes.inject([]) do |paths, node|
         path = ::File.join(@public_dir, node.attribute('src').value)
-        contents << ::File.read(path) if ::File.exists?(path)
-        contents
+        next unless ::File.exists?(path)
+        paths << path
       end
     end
 
-    def stylesheet_contents_for nodes
-      nodes.inject([]) do |contents, node|
+    def stylesheet_paths_for nodes
+      nodes.inject([]) do |paths, node|
         path = ::File.join(@public_dir, node.attribute('href').value)
-        contents << ::File.read(path) if ::File.exists?(path)
-        contents
+        next unless ::File.exists?(path)
+        paths << path
       end
     end
 

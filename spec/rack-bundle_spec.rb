@@ -112,7 +112,7 @@ describe Rack::Bundle do
 
   context 'private methods' do
     it 'returns a URL to a bundle on #bundle_path' do
-      @jsbundle = Rack::Bundle::JSBundle.new 'omg'
+      @jsbundle = make_js_bundle
       @bundle.send(:bundle_path, @jsbundle).should == "/rack-bundle-#{@jsbundle.hash}.js"
     end
   end
