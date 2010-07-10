@@ -21,11 +21,12 @@ module Rack
     end
 
     def call env
-      if match = %r(^/rack-bundle-(\w+)).match(env['PATH_INFO'])
+      @env = env
+      if match = %r(^/rack-bundle-(\w+)).match(@env['PATH_INFO'])
         bundle = @storage.find_bundle_by_hash match[1]
         bundle ? respond_with(bundle) : not_found
       else
-        status, headers, @response = @app.call(env)
+        status, headers, @response = @app.call(@env)
         return [status, headers, @response] unless headers['Content-Type'] =~ /html/
         parse!
         replace_javascripts!
@@ -114,8 +115,20 @@ module Rack
     end
 
     def respond_with bundle
-      content_type = bundle.is_a?(JSBundle) ? 'text/javascript' : 'text/css'
-      [200, {'Content-Type' => content_type}, [bundle.contents]]
+      opts = { :urls => '/' }
+      if storage.is_a?(FileSystemStore)
+        opts[:root] = public_dir
+      else
+        write_bundle_to_tmp bundle
+        opts[:root] = File.join(Dir.pwd, 'tmp')
+      end
+
+      Rack::Static.new(@app, opts).call(@env)
+    end
+
+    def write_bundle_to_tmp bundle
+      filename = "./tmp/rack-bundle-#{bundle.hash}.#{bundle.extension}"
+      File.open(filename, 'w') { |file| file << bundle.contents }
     end
   end
 end

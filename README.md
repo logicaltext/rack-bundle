@@ -38,6 +38,7 @@ There's a few assumptions that this middleware makes in order to work. Note that
 
 * That external Javascripts (read: not hosted on the same web server as the app itself) come *first* in the DOM. This may or may not be an issue for you, but I've experienced a few. I'll add automatic reordering soon.
 * That you're linking Javascripts inside the <head> tag. It won't break your app if you don't. But scripts that sit outside will be ignored.
+* That if you're using DatabaseStore, you have a `./tmp` directory.
 
 # How does it work
 

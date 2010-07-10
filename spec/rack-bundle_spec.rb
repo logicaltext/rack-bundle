@@ -26,7 +26,14 @@ describe Rack::Bundle do
     it "fetches a bundle from storage and serves if the request URL matches" do
       @bundle.storage.should_receive(:find_bundle_by_hash).with(@jsbundle.hash).and_return(@jsbundle)
       status, headers, response = @bundle.call @js_request      
-      response.join.should == @jsbundle.contents
+      output = ""
+      response.each { |part| output << part }
+      output.should == @jsbundle.contents
+    end
+
+    it "serves the contents of a bundle via Rack::Static if the URL matches" do
+      status, headers, response = @bundle.call @js_request
+      response.should be_a(Rack::File)
     end
   end
 
