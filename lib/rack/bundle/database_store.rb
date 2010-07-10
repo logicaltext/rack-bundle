@@ -8,11 +8,11 @@ class Rack::Bundle::DatabaseStore
     create_table!
   end
   
-  def find_bundle_by_hash hash
+  def find_bundle_file_by_hash hash
     return nil unless result = @db[:rack_bundle].where(:hash => hash).first
-    result[:type] == 'js' ? 
-      Rack::Bundle::JSBundle.new(result[:contents]) :
-      Rack::Bundle::CSSBundle.new(result[:contents])
+    filename = "./tmp/rack-bundle-#{result[:hash]}.#{result[:type]}"
+    File.open(filename, 'w') { |file| file << result[:contents] }
+    filename
   end
   
   def add bundle
@@ -23,7 +23,7 @@ class Rack::Bundle::DatabaseStore
   end
   
   def has_bundle? bundle
-    not find_bundle_by_hash(bundle.hash).nil?
+    not @db[:rack_bundle].where(:hash => hash).empty?
   end
     
   private  

@@ -16,8 +16,9 @@ describe Rack::Bundle::FileSystemStore do
     subject.dir.should == Dir.tmpdir
   end
   
-  it "finds a bundle by it's hash on #find_bundle_by_hash" do
-    @storage.find_bundle_by_hash(@jsbundle.hash).should == @jsbundle
+  it "finds a bundle file by its hash on #find_bundle_by_hash" do
+    expected = File.join(@storage.dir, "rack-bundle-#{@jsbundle.hash}.js")
+    @storage.find_bundle_file_by_hash(@jsbundle.hash).should == expected
   end
     
   context 'storing bundles in the file system' do

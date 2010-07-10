@@ -23,7 +23,7 @@ module Rack
     def call env
       @env = env
       if match = %r(^/rack-bundle-(\w+)).match(@env['PATH_INFO'])
-        bundle = @storage.find_bundle_by_hash match[1]
+        bundle = @storage.find_bundle_file_by_hash match[1]
         bundle ? respond_with(bundle) : not_found
       else
         status, headers, @response = @app.call(@env)
@@ -119,16 +119,11 @@ module Rack
       if storage.is_a?(FileSystemStore)
         opts[:root] = public_dir
       else
-        write_bundle_to_tmp bundle
         opts[:root] = File.join(Dir.pwd, 'tmp')
       end
 
       Rack::Static.new(@app, opts).call(@env)
     end
 
-    def write_bundle_to_tmp bundle
-      filename = "./tmp/rack-bundle-#{bundle.hash}.#{bundle.extension}"
-      File.open(filename, 'w') { |file| file << bundle.contents }
-    end
   end
 end
