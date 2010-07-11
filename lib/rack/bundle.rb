@@ -123,7 +123,7 @@ module Rack
     def respond_with bundle
       opts = { :urls => '/' }
       if storage.is_a?(FileSystemStore)
-        opts[:root] = public_dir
+        opts[:root] = storage.dir
       else
         opts[:root] = File.join(Dir.pwd, 'tmp')
       end
