@@ -96,7 +96,7 @@ module Rack
         unless ::File.exists?(path)
           path = ::File.join(Dir.pwd, 'tmp', node.attribute('src').value)
         end
-        next unless ::File.exists?(path)
+        paths unless ::File.exists?(path)
         paths << path
       end
     end
@@ -107,7 +107,7 @@ module Rack
         unless ::File.exists?(path)
           path = ::File.join(Dir.pwd, 'tmp', node.attribute('href').value)
         end
-        next unless ::File.exists?(path)
+        paths unless ::File.exists?(path)
         paths << path
       end
     end
