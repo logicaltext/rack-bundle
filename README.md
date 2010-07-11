@@ -31,6 +31,7 @@ _DatabaseStore_ assumes an environment variable called *DATABASE_URL* exists, wh
       rack_bundle.storage = Rack::Bundle::DatabaseStore.new "sqlite://foo.sqlite3"
     end
     
+By default, Rack::Bundle will look for original assets in the directory specified by the `public_dir` option. If it can't find an asset there, it will also look in `./tmp`. This might be useful in situations where you want to compile your CSS or JavaScript (maybe using [SASS](http://sass-lang.com) or [CoffeeScript](http://jashkenas.github.com/coffee-script)), but can't write these compiled files to the `public_dir`, since you might be using a read-only filesystem like Heroku.
 
 # A few assumptions
 

@@ -93,6 +93,9 @@ module Rack
     def scripts
       local_javascript_nodes.inject([]) do |paths, node|
         path = ::File.join(@public_dir, node.attribute('src').value)
+        unless ::File.exists?(path)
+          path = ::File.join(Dir.pwd, 'tmp', node.attribute('src').value)
+        end
         next unless ::File.exists?(path)
         paths << path
       end
@@ -101,6 +104,9 @@ module Rack
     def stylesheet_paths_for nodes
       nodes.inject([]) do |paths, node|
         path = ::File.join(@public_dir, node.attribute('href').value)
+        unless ::File.exists?(path)
+          path = ::File.join(Dir.pwd, 'tmp', node.attribute('href').value)
+        end
         next unless ::File.exists?(path)
         paths << path
       end
